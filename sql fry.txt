@@ -1,0 +1,217 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Data.SqlClient;
+
+namespace DBExample
+{
+    public partial class frmDashboard : Form
+    {
+        //Create private variables to store username, password, and the connection to the database
+        //private string username;
+        //private string password;
+        private SqlConnection conn;
+
+        public frmDashboard()
+        {
+            InitializeComponent();
+        }
+
+        private void frmDashboard_Load(object sender, EventArgs e)
+        {
+            // Create SQLConnection string using your username and password
+            conn = new SqlConnection();
+            conn.ConnectionString =
+                "Data Source=appliedcomp;" +
+                "Initial Catalog=database5;" +
+                "User id=lab5;" +
+                "Password=Password1;";
+
+            //Create a command object that actually allows us to excecute a query
+            SqlCommand cmd = new SqlCommand();
+            //Create a reader object so that we can read the results from the query
+            //This is particularly helpful for returning a list of data
+            SqlDataReader reader;
+
+            //What is the query?
+            cmd.CommandText = " SELECT dir_name FROM Joshua_Jordans";
+            //cmd.CommandText = "Select firstname, lastname, major from Student where ID = 'S1001';";
+            cmd.CommandType = CommandType.Text;
+            //Give the command object the connection string we already wrote
+            cmd.Connection = conn;
+            //Open the connection
+            conn.Open();
+
+            //Execute the query storing the results in reader
+            reader = cmd.ExecuteReader();
+
+            try
+            {
+                //Continue reading while you have results to read through
+                while (reader.Read())
+                {
+                    ?.Items.Add(reader["dir_name"]);
+                }
+            }
+            finally
+            {
+                // Always call Close when done reading.
+                reader.Close();
+            }
+
+            conn.Close();
+        }
+
+        //Create a way for the login form to pass the information back to this class
+        public void setInfo(string user, string pass)
+        {
+            //username = user;
+            //password = pass;
+        }
+
+       
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            conn = new SqlConnection();
+            conn.ConnectionString =
+                "Data Source=appliedcomp;" +
+                "Initial Catalog=database5;" +
+                "User id=lab5;" +
+                "Password=Password1;";
+
+            //Create a command object that actually allows us to excecute a query
+            SqlCommand cmd = new SqlCommand();
+            SqlCommand cmd2 = new SqlCommand();
+            //Create a reader object so that we can read the results from the query
+            //This is particularly helpful for returning a list of data
+            SqlDataReader reader;
+            SqlDataReader reader2;
+
+            //What is the query?
+            cmd.CommandText = "SELECT jordan_type FROM Joshua_Jordan where jordan_name = '" + JordanListBox.SelectedItem + "';";
+            cmd2.CommandText = "SELECT jordan_resale FROM Joshua_Price where jordan_price = '" + JordanListBox.SelectedItem + "';";
+
+            cmd.CommandType = CommandType.Text;
+            cmd2.CommandType = CommandType.Text;
+
+
+            //Give the command object the connection string we already wrote
+            cmd.Connection = conn;
+            cmd2.Connection = conn;
+
+            conn.Open();
+
+            //Execute the query storing the results in reader
+            reader = cmd.ExecuteReader();
+
+            try
+            {
+                //Continue reading while you have results to read through
+                while (reader.Read())
+                {
+                    //Reader is a list
+                    ?.Items.Add(reader[""]);
+
+                }
+
+            }
+            finally
+            {
+                // Always call Close when done reading.
+                reader.Close();
+            }
+
+            reader2 = cmd2.ExecuteReader();
+            try
+            {
+                //Continue reading while you have results to read through
+                while (reader2.Read())
+                {
+                    //Reader is a list
+                    ?.Text = reader2[0].ToString();
+                }
+            }
+            finally
+            {
+                // Always call Close when done reading.
+                reader2.Close();
+            }
+            conn.Close();
+        }
+
+        private void listBox1_SelectedIndexChanged_1(object sender, EventArgs e)
+        {
+            conn = new SqlConnection();
+            conn.ConnectionString =
+                "Data Source=appliedcomp;" +
+                "Initial Catalog=database5;" +
+                "User id=lab5;" +
+                "Password=Password1;";
+
+            //Create a command object that actually allows us to excecute a query
+            SqlCommand cmd = new SqlCommand();
+            SqlCommand cmd2 = new SqlCommand();
+            //Create a reader object so that we can read the results from the query
+            //This is particularly helpful for returning a list of data
+            SqlDataReader reader;
+            SqlDataReader reader2;
+
+            //What is the query?
+            cmd.CommandText = "SELECT jordan_release_date FROM Joshua_Release where jordan_release  = '" + jordandateBox.SelectedItem + "';";
+            cmd2.CommandText = "SELECT jordan_year FROM Joshua_Year where jordan_release_year = '" + jordandateBox.SelectedItem + "';";
+
+            cmd.CommandType = CommandType.Text;
+            cmd2.CommandType = CommandType.Text;
+            //Give the command object the connection string we already wrote
+            cmd.Connection = conn;
+            cmd2.Connection = conn;
+
+            conn.Open();
+
+            //Execute the query storing the results in reader
+            reader = cmd.ExecuteReader();
+
+            try
+            {
+                //Continue reading while you have results to read through
+                while (reader.Read())
+                {
+                    //Reader is a list
+                    ?.Text = reader[0].ToString();
+
+                }
+
+            }
+            finally
+            {
+                // Always call Close when done reading.
+                reader.Close();
+            }
+
+            reader2 = cmd2.ExecuteReader();
+            try
+            {
+                //Continue reading while you have results to read through
+                while (reader2.Read())
+                {
+                    //Reader is a list
+                    ?.Text = reader2[0].ToString();
+                }
+            }
+            finally
+            {
+                // Always call Close when done reading.
+                reader2.Close();
+            }
+            conn.Close();
+        }
+
+
+    }
+}

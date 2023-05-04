@@ -1,0 +1,123 @@
+#Mondrian Art
+
+# Draw random "art" in a Mondrian style
+
+import tkinter as tk
+import random
+
+WIDTH = 1025
+HEIGHT = 775
+
+SPLIT_LOW = 120
+SPLIT_PENALTY = 1.5
+
+#
+# TODO:
+# Select a color randomly
+#
+
+def randomColor():
+  r = (random.randint(0, 100) / 100)
+  if r < 0.0833:
+    return "red"                          #red
+  elif r < 0.1667:
+    return "blue"                         #blue
+  elif r < 0.25:
+    return "yellow"                       #yellow
+  else:
+    return "white"                        #return the ones not occupied with white
+
+#
+# TODO:
+# Split the region both vertically and horizontally
+# Invoke mondrian on all four quadrants
+#
+
+def split_both(x, y, w, h, canvas):
+  hSplit = random.randrange(33, 68) / 100   #random horizontal split between 33% & 67%
+  vSplit = random.randrange(33, 68) / 100   #random vertical split between 33% and 67%
+  left = round(hSplit * w)                    #left; for side by side 
+  right = w - left                            #right; for side by side
+  top = round(vSplit * h)                     #height of top; above the other
+  bottom = h - top                            #height of bottom; above the other
+  #mondrian on all four quadrants
+  mondrian(x, y, left, top, canvas)           
+  mondrian(x + left, y, right, top, canvas)
+  mondrian(x, y + top, left, bottom, canvas)
+  mondrian(x + left, y + top, right, bottom, canvas)
+
+#
+# TODO:
+# Split so that the regions are side by side
+# Invoke mondrian on both halves
+#
+
+def split_horizontal(x, y, w, h, canvas):                   #horizontal
+  hSplit = random.randrange(33, 68) / 100
+  left = round(hSplit * w)
+  right = w - left
+  #mondrian on both halves
+  mondrian(x, y, left, h, canvas)
+  mondrian(x + left, y, right, h, canvas)
+
+#
+# TODO:
+# Split so that one region is above the other
+# Invoke mondrian on both halves
+#
+
+def split_vertical(x, y, w, h, canvas):                     #vertical
+  vSplit = random.randrange(33, 68) / 100
+  top = round(vSplit * h)
+  bottom = h - top
+  #mondrian on both halves
+  mondrian(x, y, w, top, canvas)
+  mondrian(x, y + top, w, bottom, canvas)
+
+#
+# TODO:
+# Use recursion to draw "art" in a Mondrian style
+# This is the algorithm in the project description
+#
+
+def mondrian(x, y, w, h, canvas):
+  #splits of regions
+  if w > WIDTH / 2 and h > HEIGHT / 2:
+    split_both(x, y, w, h, canvas)
+  elif w > WIDTH / 2:
+    split_horizontal(x, y, w, h, canvas)
+  elif h > HEIGHT / 2:
+    split_vertical(x, y, w, h, canvas)
+  else:
+    #random split of horizontal
+    #random split of vertical
+    hzsplit = random.randrange(SPLIT_LOW, max(round(SPLIT_PENALTY * w) + 1, \
+                       SPLIT_LOW + 1))              #horizontal
+    vrsplit = random.randrange(SPLIT_LOW, max(round(SPLIT_PENALTY * h) + 1, \
+                       SPLIT_LOW + 1))              #vertical
+
+    if hzsplit < w and vrsplit < h:
+      split_both(x, y, w, h, canvas)
+    elif hzsplit < w:
+      split_horizontal(x, y, w, h, canvas)
+    elif vrsplit < h:
+      split_vertical(x, y, w, h, canvas)
+
+    #fill with colors; yellow, blue, red and white
+    #black outline
+    else:
+      color = randomColor()
+      canvas.create_rectangle(x, y, x + w, y + h, \
+                              fill=color, outline="black", width=3)
+
+def main():
+  # Create a window with a canvas
+  master = tk.Tk()
+  canvas = tk.Canvas(master, width=WIDTH, height=HEIGHT)
+  canvas.pack()
+
+  # Draw the art
+  mondrian(0, 0, 1024, 768, canvas)
+  tk.mainloop()
+
+main()
